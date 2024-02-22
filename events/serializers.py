@@ -16,14 +16,6 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'name', 'date', 'description', 'owner')
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'password',]
-
-
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])

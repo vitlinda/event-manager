@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from events import views
-from events.views import EventViewSet, UserViewSet, RegisterView
+from events.views import EventViewSet, RegisterView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView, TokenRefreshView,)
 
@@ -15,12 +15,6 @@ event_detail = EventViewSet.as_view({
     'patch': 'partial_update',
     'delete': 'destroy'
 })
-user_list = UserViewSet.as_view({
-    'get': 'list'
-})
-user_detail = UserViewSet.as_view({
-    'get': 'retrieve'
-})
 
 urlpatterns = [
     path('events/',
@@ -29,17 +23,10 @@ urlpatterns = [
     path('events/<int:pk>/',
          event_detail,
          name='event-detail'),
-    path('users/',
-         user_list,
-         name='user-list'),
-    path('users/<int:pk>/',
-         user_detail,
-         name='user-detail'),
 ]
 
 router = DefaultRouter()
 router.register(r'events', views.EventViewSet, basename='event')
-router.register(r'users', views.UserViewSet, basename='user')
 
 # The API URLs are determined automatically by the router.
 urlpatterns = [
