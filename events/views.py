@@ -17,7 +17,7 @@ class RegisterView(generics.CreateAPIView):
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    This viewset automatically provides `list` and `detail` actions.
+    User viewset for `list` and `detail` a .
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -25,13 +25,13 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class EventViewSet(viewsets.ModelViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
+    Event viewset for `list`, `create`, `retrieve`,
+    `update` and `destroy`.
     """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+        permissions.IsAuthenticated, IsOwnerOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
