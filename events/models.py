@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 
@@ -13,3 +14,9 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['created']
+
+    def is_in_future(self):
+        """
+        Check if an event is in the future.
+        """
+        return self.start_date > timezone.now()

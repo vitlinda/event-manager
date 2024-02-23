@@ -5,8 +5,6 @@ from events.models import Event
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.exceptions import ValidationError
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):

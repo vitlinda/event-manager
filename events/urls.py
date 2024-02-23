@@ -7,13 +7,16 @@ from rest_framework_simplejwt.views import (
 
 event_list = EventViewSet.as_view({
     'get': 'list',
-    'post': 'create'
+    'post': 'create',
+    'get': 'my_events'
 })
 event_detail = EventViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',
-    'delete': 'destroy'
+    'delete': 'destroy',
+    'post': 'register_for_event',
+    'post': 'unregister_from_event'
 })
 
 urlpatterns = [
@@ -23,14 +26,11 @@ urlpatterns = [
     path('events/<int:pk>/',
          event_detail,
          name='event-detail'),
-    path('events/my-events/',
-         views.EventViewSet.as_view({'get': 'my_events'}), name='my-events'),
 ]
 
 router = DefaultRouter()
 router.register(r'events', views.EventViewSet, basename='event')
 
-# The API URLs are determined automatically by the router.
 urlpatterns = [
     path('', include(router.urls)),
     path('register/', RegisterView.as_view()),
