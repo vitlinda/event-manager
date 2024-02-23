@@ -1,11 +1,15 @@
 from django.db import models
 
+
 class Event(models.Model):
     name = models.CharField(max_length=100)
-    date = models.DateTimeField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     description = models.TextField()
-    location = models.CharField(max_length=100)
-    owner = models.ForeignKey('auth.User', related_name='events', on_delete=models.CASCADE)
+    attendees = models.ManyToManyField('auth.User')
+    owner = models.ForeignKey(
+        'auth.User', related_name='events', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['date']
+        ordering = ['created']

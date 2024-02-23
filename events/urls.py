@@ -23,6 +23,8 @@ urlpatterns = [
     path('events/<int:pk>/',
          event_detail,
          name='event-detail'),
+    path('events/my-events/',
+         views.EventViewSet.as_view({'get': 'my_events'}), name='my-events'),
 ]
 
 router = DefaultRouter()

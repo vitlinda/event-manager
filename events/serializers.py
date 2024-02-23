@@ -10,10 +10,13 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    attendees = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=User.objects.all())
 
     class Meta:
         model = Event
-        fields = ('id', 'name', 'date', 'description', 'owner')
+        fields = ('id', 'name', 'start_date', 'end_date',
+                  'description', 'attendees', 'owner')
 
 
 class RegisterSerializer(serializers.ModelSerializer):
