@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.exceptions import ValidationError
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,6 +18,12 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
         model = Event
         fields = ('id', 'name', 'start_date', 'end_date',
                   'description', 'attendees', 'owner')
+
+    def validate(self, attrs):
+        if attrs['start_date'] > attrs['end_date']:
+            raise serializers.ValidationError(
+                "End date must be after start date.")
+        return attrs
 
 
 class RegisterSerializer(serializers.ModelSerializer):
