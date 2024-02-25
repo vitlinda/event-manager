@@ -7,7 +7,7 @@ Build the docker image:
 
 Run the docker container:
 ```bash
-> docker run -p 8000:8000 event_manager
+> docker run -p 8080:8080 event_manager
 ```
 
 Then the application can be accessed at http://127.0.0.1:8000/

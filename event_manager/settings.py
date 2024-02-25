@@ -41,15 +41,24 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'drf_yasg',
     'django_filters',
+    'drf_spectacular'
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Event Manager API',
+    'DESCRIPTION': 'Event Manager',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 SIMPLE_JWT = {
