@@ -64,6 +64,9 @@ class EventViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def my_events(self, request):
+        """
+        This action allows an authenticated user to retrieve all the events they have created.
+        """
         user = request.user
         events = Event.objects.filter(owner=user)
         serializer = self.get_serializer(events, many=True)
@@ -72,8 +75,6 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def register_for_event(self, request, pk=None):
         """
-        Register an authenticated user for a future event.
-
         This action allows an authenticated user to register for a future event.
         It checks if the event is in the future and if the event has reached its
         capacity before registering the user.
