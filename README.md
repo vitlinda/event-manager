@@ -2,22 +2,21 @@
 
 Build the docker image:
 ```bash
-docker build -t event_manager .
+docker-compose build
 ``` 
 
-Run the docker container:
+Run the container:
 ```bash
-docker run -p 8000:8000 event_manager
+docker-compose up
 ```
 
-Then the application can be accessed at http://127.0.0.1:8000/
+The application can be accessed at http://127.0.0.1:8000/
 
-The tests can be run using the following command from the root directory of the project:
-
+Tests can be run using the following command from the root directory of the project:
 ```bash
 pytest
 ```
 
-The API can be tried out using the following link via the swagger interface:
+The API can be tried out using the following link via swagger interface:
 
 http://127.0.0.1:8000/api/schema/swagger/
