@@ -36,8 +36,7 @@ class EventFilter(django_filters.FilterSet):
 
 class EventViewSet(viewsets.ModelViewSet):
     """
-    Event viewset for `list`, `create`, `retrieve`,
-    `update` and `destroy`.
+    `list`, `create`, `retrieve`, `update` or `destroy` an Event.
     """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
@@ -52,7 +51,7 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def my_events(self, request):
         """
-        Retrieve events created by the authenticated user.
+        Retrieve all the events created by the authenticated user.
         """
         user = request.user
         events = Event.objects.filter(owner=user)
@@ -82,7 +81,7 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def unregister_from_event(self, request, pk=None):
         """
-        Unregister the authenticated user from the event.
+        Unregister the authenticated user from the provided event.
         """
         event = self.get_object()
 
