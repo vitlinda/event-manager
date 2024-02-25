@@ -3,7 +3,8 @@ from rest_framework import permissions
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
-    Custom permission to only allow owners of an event to edit it.
+    Custom permission to check if the user has permission 
+    to perform the requested action on the event.
     """
 
     def has_object_permission(self, request, view, obj):

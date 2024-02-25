@@ -12,7 +12,9 @@ import django_filters.rest_framework
 
 class RegisterView(generics.CreateAPIView):
     """
-    Register a new user.
+    This view allows users to register a new account by providing their
+    username, email, and password. The registration process creates a new
+    User object in the database.
     """
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
@@ -20,6 +22,11 @@ class RegisterView(generics.CreateAPIView):
 
 
 class EventFilter(django_filters.FilterSet):
+    """
+    This filter allows users to retrieve events based on whether they have
+    already occurred or are scheduled for the future. It provides a boolean
+    filter field 'is_past_event'.
+    """
     is_past_event = django_filters.BooleanFilter(method='filter_is_past_event')
 
     class Meta:
@@ -36,7 +43,10 @@ class EventFilter(django_filters.FilterSet):
 
 class EventViewSet(viewsets.ModelViewSet):
     """
-    `list`, `create`, `retrieve`, `update` or `destroy` an Event.
+    This viewset provides CRUD operations for managing events. It allows users
+    to list, create, retrieve, update, and delete events. It also provides
+    additional actions for registering and unregistering users from events and 
+    for retrieving all the events created by the authenticated user.
     """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
@@ -46,13 +56,14 @@ class EventViewSet(viewsets.ModelViewSet):
     filterset_class = EventFilter
 
     def perform_create(self, serializer):
+        """
+        This method is called when creating a new event. It sets the owner of
+        the event to the authenticated user.
+        """
         serializer.save(owner=self.request.user)
 
     @action(detail=False, methods=['get'])
     def my_events(self, request):
-        """
-        Retrieve all the events created by the authenticated user.
-        """
         user = request.user
         events = Event.objects.filter(owner=user)
         serializer = self.get_serializer(events, many=True)
@@ -62,6 +73,10 @@ class EventViewSet(viewsets.ModelViewSet):
     def register_for_event(self, request, pk=None):
         """
         Register an authenticated user for a future event.
+
+        This action allows an authenticated user to register for a future event.
+        It checks if the event is in the future and if the event has reached its
+        capacity before registering the user.
         """
         event = self.get_object()
 
@@ -81,7 +96,8 @@ class EventViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def unregister_from_event(self, request, pk=None):
         """
-        Unregister the authenticated user from the provided event.
+        This action allows an authenticated user to unregister from an event
+        they have previously registered for.
         """
         event = self.get_object()
 

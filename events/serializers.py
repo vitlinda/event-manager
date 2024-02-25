@@ -8,6 +8,18 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class EventSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for the Event model.
+
+    This serializer is used to convert Event model instances into JSON
+    representation and vice versa. It also provides validation for the
+    fields of the Event model.
+
+    Methods:
+        validate: Validates the start_date and end_date fields of the event checking
+        if the end_date is before the start_date.
+    """
+
     owner = serializers.ReadOnlyField(source='owner.username')
     attendees = serializers.PrimaryKeyRelatedField(
         many=True, queryset=User.objects.all())
@@ -25,6 +37,18 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for user registration.
+
+    This serializer is used to convert User model instances into JSON
+    representation and vice versa. It provides validation for the fields
+    required for user registration.
+
+    Methods:
+        validate: Validates the password and password2 fields by checking if they match.
+        create: Creates a new user instance.
+    """
+
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
@@ -56,10 +80,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Overrides the get_token method to include the username in the token payload.
+    """
+
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        # include the username in the token payload
         token['username'] = user.username
 
         return token

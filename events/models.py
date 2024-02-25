@@ -19,5 +19,8 @@ class Event(models.Model):
     def is_in_future(self):
         """
         Check if an event is in the future.
+
+        Returns:
+            bool: True if the event is in the future, False otherwise.
         """
         return self.start_date > timezone.now()
