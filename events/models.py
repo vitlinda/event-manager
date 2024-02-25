@@ -11,6 +11,7 @@ class Event(models.Model):
     owner = models.ForeignKey(
         'auth.User', related_name='events', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
+    capacity = models.PositiveIntegerField(default=3)
 
     class Meta:
         ordering = ['created']

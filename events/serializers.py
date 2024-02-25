@@ -15,7 +15,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
         fields = ('id', 'name', 'start_date', 'end_date',
-                  'description', 'attendees', 'owner')
+                  'description', 'attendees', 'owner', 'capacity')
 
     def validate(self, attrs):
         if attrs['start_date'] > attrs['end_date']:

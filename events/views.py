@@ -53,6 +53,10 @@ class EventViewSet(viewsets.ModelViewSet):
         if not event.is_in_future():
             return Response({'detail': 'Cannot register to past events.'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Check if the event has reached its capacity
+        if event.attendees.count() >= event.capacity:
+            return Response({'detail': 'Event capacity reached. Cannot register more users.'}, status=status.HTTP_400_BAD_REQUEST)
+
         # Register the authenticated user for the event
         user = request.user
         event.attendees.add(user)
