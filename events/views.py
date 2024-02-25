@@ -1,6 +1,5 @@
-from datetime import timezone
+from django.utils import timezone
 from django.contrib.auth.models import User
-from django.http import Http404
 from rest_framework import permissions, viewsets, generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -8,6 +7,7 @@ from rest_framework.decorators import action
 from events.permissions import IsOwnerOrReadOnly
 from events.serializers import EventSerializer, RegisterSerializer
 from events.models import Event
+import django_filters.rest_framework
 
 
 class RegisterView(generics.CreateAPIView):
@@ -19,6 +19,21 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
+class EventFilter(django_filters.FilterSet):
+    is_past_event = django_filters.BooleanFilter(method='filter_is_past_event')
+
+    class Meta:
+        model = Event
+        fields = ['is_past_event']
+
+    def filter_is_past_event(self, queryset, name, value):
+        today = timezone.now()
+        if value:
+            return queryset.filter(start_date__lt=today)
+        else:
+            return queryset.filter(start_date__gte=today)
+
+
 class EventViewSet(viewsets.ModelViewSet):
     """
     Event viewset for `list`, `create`, `retrieve`,
@@ -28,6 +43,8 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventSerializer
     permission_classes = (
         permissions.IsAuthenticated, IsOwnerOrReadOnly,)
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_class = EventFilter
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
