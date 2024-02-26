@@ -8,6 +8,7 @@ from events.permissions import IsOwnerOrReadOnly
 from events.serializers import EventSerializer, RegisterSerializer
 from events.models import Event
 import django_filters.rest_framework
+from drf_spectacular.utils import extend_schema
 
 
 class RegisterView(generics.CreateAPIView):
@@ -60,7 +61,7 @@ class EventViewSet(viewsets.ModelViewSet):
         This method is called when creating a new event. It sets the owner of
         the event to the authenticated user.
         """
-        serializer.save(owner=self.request.user)
+        serializer.save(owner=self.request.user, attendees=[])
 
     @action(detail=False, methods=['get'])
     def my_events(self, request):
@@ -72,6 +73,7 @@ class EventViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(events, many=True)
         return Response(serializer.data)
 
+    @extend_schema(request=None)  # Hide the request body in the schema
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def register_for_event(self, request, pk=None):
         """
@@ -94,6 +96,7 @@ class EventViewSet(viewsets.ModelViewSet):
         event.attendees.add(user)
         return Response({'detail': 'Successfully registered for the event.'}, status=status.HTTP_201_CREATED)
 
+    @extend_schema(request=None)  # Hide the request body in the schema
     @action(detail=True, methods=['post'], permission_classes=[permissions.IsAuthenticated])
     def unregister_from_event(self, request, pk=None):
         """

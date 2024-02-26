@@ -19,15 +19,13 @@ class EventSerializer(serializers.ModelSerializer):
         validate: Validates the start_date and end_date fields of the event checking
         if the end_date is before the start_date.
     """
-
     owner = serializers.ReadOnlyField(source='owner.username')
-    attendees = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=User.objects.all())
+    capacity = serializers.IntegerField(min_value=0, max_value=10)
 
     class Meta:
         model = Event
         fields = ('id', 'name', 'start_date', 'end_date',
-                  'description', 'attendees', 'owner', 'capacity')
+                  'description', 'owner', 'capacity')
 
     def validate(self, attrs):
         if attrs['start_date'] > attrs['end_date']:
